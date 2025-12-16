@@ -1,13 +1,8 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import savingsRoutes from "./routes/savingsRoutes.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -38,13 +33,17 @@ app.use("/api/users", userRoutes);
 app.use("/api/savings", savingsRoutes);
 
 /* =======================
-   Serve React build
+   Redirect all other routes
 ======================= */
-app.use(express.static(path.join(__dirname, "build")));
-
-// Catch-all route to serve React for client-side routing
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.redirect("https://savings-tracker-zqly.onrender.com");
+});
+
+/* =======================
+   HEALTH CHECK
+======================= */
+app.get("/health", (req, res) => {
+  res.send("Savings Tracker API running");
 });
 
 export default app;
